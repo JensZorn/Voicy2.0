@@ -13,9 +13,7 @@
 #
 # <°))))><
 ###############################################################################
-from root_window import root_window
-from queues import interaction_queue
+from queue import Queue
 
-if __name__ == "__main__":
-    root = root_window()
-    root.mainloop()
+
+interaction_queue = Queue(maxsize=0)

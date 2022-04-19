@@ -1,13 +1,13 @@
-#!/usr/bin/env python3 ########################################################
-# -*- coding: UTF-8 -*-
+###############################################################################
 #
 #
-#               Main menu for my small projects
 #
-#               by Jens Zorn
+#               Voiceassistant
+#
+#               by Sarah Köster, Dennis Stoy, Jens Zorn
 #
 #
-#               Additional information can be found in tmps.py
+#               ...
 #
 #
 #
@@ -16,6 +16,7 @@
 # import random
 import tkinter as tk
 import spacy
+from queues import interaction_queue
 nlp = spacy.load("de_core_news_lg")
 
 """
@@ -43,9 +44,18 @@ class learning():
         pass
 
 
-class show_interaction():
-    def __init__(self, parent, interaction_queue, monitoring_queue):
+class chat_section():
+    def __init__(self, parent):
         super().__init__()
+
+        self.label = tk.Label(parent, text="Command:")
+        self.label.grid(row=2, column=0)
+        self.written_input_entry = tk.Entry(parent, width=70)
+        self.written_input_entry.grid(row=2, column=1)
+        self.written_input_entry.bind("<Return>", self.send_written_input)
+        self.button_send = tk.Button(parent, text="SEND",
+                                             command=lambda: self.send_written_input(True))
+        self.button_send.grid(row=2, column=4, pady=2)
 
         self.chat_history = tk.Canvas(parent, bg="blue")
         self.chat_history.grid(row=0, column=0, columnspan=6, sticky=tk.NSEW)
@@ -83,6 +93,12 @@ class show_interaction():
             # except Exception:
             # print("There has been an error!")
 
+    def send_written_input(self, event):
+
+        self.writtencommand = self.written_input_entry.get()
+        self.written_input_entry.delete(0, tk.END)
+        interaction_queue.put(self.writtencommand)
+
     def chat_bubble(self, owner, text):
         self.column, self.row = list(self.chat_history_frame.grid_size())
         chatrow = owner + str(self.row)
@@ -111,5 +127,5 @@ class show_interaction():
                         case "können":
                             usernlp += "Du kannst mich mal!"
                         case "kalender":
-                            usernlp += "Du kannst mich mal!"
+                            usernlp += "Kalender starten"
         return usernlp
