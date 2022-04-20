@@ -16,6 +16,7 @@
 # import random
 import tkinter as tk
 import spacy
+from threading import Thread, enumerate
 from queues import interaction_queue
 nlp = spacy.load("de_core_news_lg")
 
@@ -47,7 +48,18 @@ class learning():
 class chat_section():
     def __init__(self, parent):
         super().__init__()
+        self.modu = Thread(target=self.main, name="chat_section", args=(parent, ), daemon=True)
+        active_threads = enumerate()
+        print (active_threads)
+        chat_section_alive=False
+        for item in active_threads:
+            print(item)
+            if(item.getName()=="chat_section"):
+                chat_section_alive=True
+        if not chat_section_alive:
+            self.modu.start()
 
+    def main(self, parent):
         self.label = tk.Label(parent, text="Command:")
         self.label.grid(row=2, column=0)
         self.written_input_entry = tk.Entry(parent, width=70)

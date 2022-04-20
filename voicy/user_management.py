@@ -3,7 +3,7 @@ import tkinter as tk
 
 class user_management(tk.Tk):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self)
         self.title("Create a new User")
         self.geometry("500x300")

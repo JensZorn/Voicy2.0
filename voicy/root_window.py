@@ -14,13 +14,12 @@
 # <°))))><
 ###############################################################################
 import tkinter as tk
-from threading import Thread
-from queues import interaction_queue
 import importlib
 
 
 class root_window(tk.Tk):
     def __init__(self):
+        print("Loading, please wait!")
         tk.Tk.__init__(self)
         self.title("Voiceassistant")
         self.columnconfigure(0, weight=1)
@@ -35,7 +34,7 @@ class root_window(tk.Tk):
         self.main_frame.grid(row=1, column=0, sticky=tk.NSEW)
 
         self.menu_bar(self.main_frame)
-
+        print("Done...")
 
     def menu_bar(self, main_frame):
         menu_bar = tk.Menu(self)
@@ -46,18 +45,11 @@ class root_window(tk.Tk):
         menu_bar.add_cascade(label="File", menu=file_menu)
 
         menu_bar.add_command(label="Chat anzeigen",
-                             command=lambda: self.chat_section(self.main_frame))
-        menu_bar.add_command(label="Benutzer anlegen", command=self.user_window)
+                             command=self.module_start(self.main_frame, "chat_section"))
+        menu_bar.add_command(label="Benutzer anlegen", command=lambda: self.module_start(self, "user_management"))
         menu_bar.add_command(label="Exit", command=quit)
 
-
-
-    def chat_section(self, parent):
-        from chat_section import chat_section
-        self.chat_section = Thread(target=chat_section,
-                                          args=(parent, ), daemon=True)
-        self.chat_section.start()
-
-    def user_window(self):
-        from user_management import user_management
-        self.user_window = user_management()
+    def module_start(self, parent, module):
+        imp_module = __import__(module, globals(), locals(), [module], 0)
+        mod = getattr(imp_module, module)
+        mod(parent)
