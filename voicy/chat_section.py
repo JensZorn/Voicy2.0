@@ -45,15 +45,17 @@ class learning():
         pass
 
 
-class chat_section():
+class chat_section(tk.Frame):
     def __init__(self, parent):
-        super().__init__()
-        self.modu = Thread(target=self.main, name="chat_section", args=(parent, ), daemon=True)
+        super().__init__(parent)
+        self.config(bg="red")
+        self.grid(row=0, column=0, sticky=tk.NSEW)
+        self.modu = Thread(target=self.main, name="chat_section", args=(self, ), daemon=True)
         active_threads = enumerate()
-        print (active_threads)
+        #print (active_threads)
         chat_section_alive=False
         for item in active_threads:
-            print(item)
+            #print(item)
             if(item.getName()=="chat_section"):
                 chat_section_alive=True
         if not chat_section_alive:
