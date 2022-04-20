@@ -33,10 +33,12 @@ class root_window(tk.Tk):
         self.main_frame = tk.Frame(self.root_canvas, bg="grey")
         self.main_frame.grid(row=1, column=0, sticky=tk.NSEW)
 
-        self.menu_bar(self.main_frame)
+        self.menu_bar(self.root_canvas, self.main_frame)
         print("Done...")
 
-    def menu_bar(self, main_frame):
+    def menu_bar(self, parent, main_frame):
+        self.menu_bar = tk.Frame(parent, bg="red", height=20)
+        self.menu_bar.grid(row=0, column=0, sticky="new")
         menu_bar = tk.Menu(self)
         self.config(menu=menu_bar)
 
