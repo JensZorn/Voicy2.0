@@ -41,7 +41,8 @@ class root_window(tk.Tk):
             "vorlage": [1, "Vorlage", "root_window"],
             "user_management": [2, "User Management", "popup"]
             }
-        self.modules = []
+        self.modules_root_window = []
+        self.modules_popup = []
 
         for item in self.modules_list:
             print(item)
@@ -51,10 +52,11 @@ class root_window(tk.Tk):
                 print("root_window")
                 imp_module = __import__(item, globals(), locals(), [item], 0)
                 mod = getattr(imp_module, item)
-                self.modules.append(mod(self.main_frame))
+                self.modules_root_window.append(mod(self.main_frame))
 
         self.menu_bar()
         self.tool_bar(self.root_canvas)
+        self.module_start(0)
         print("Done...")
 
     def menu_bar(self):
@@ -71,11 +73,14 @@ class root_window(tk.Tk):
         self.tool_bar.grid(row=0, column=0, sticky="new")
         for item in self.modules_list:
             if (self.modules_list[item][2]=="root_window"):
-                print("popup")
-                print(self.modules_list[item][0])
-                a=self.modules_list[item]
+                a=self.modules_list[item][0]
                 self.exit_button = tk.Button(self.tool_bar, text=self.modules_list[item][1],
-                                command=lambda: self.module_start(a))
+                                command=lambda j=a: self.module_start(j))
+                self.exit_button.grid(row=0, column=self.modules_list[item][0], sticky="w")
+            elif (self.modules_list[item][2]=="popup"):
+                a=item
+                self.exit_button = tk.Button(self.tool_bar, text=self.modules_list[item][1],
+                                command=lambda j=a: self.module_start1(j))
                 self.exit_button.grid(row=0, column=self.modules_list[item][0], sticky="w")
 
         self.exit_button = tk.Button(self.tool_bar, text="Exit", command=quit)
@@ -83,5 +88,11 @@ class root_window(tk.Tk):
 
     def module_start(self, module):
         print(module)
-        frame = self.modules[module]
+        frame = self.modules_root_window[module]
         frame.tkraise()
+
+    def module_start1(self, module):
+        print(module)
+        imp_module = __import__(module, globals(), locals(), [module], 0)
+        mod = getattr(imp_module, module)
+        mod(self.main_frame)
