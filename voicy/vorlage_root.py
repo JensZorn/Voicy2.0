@@ -14,9 +14,10 @@
 # <°))))><
 ###############################################################################
 import tkinter as tk
+from tkinter import ttk
 
 
-class vorlage(tk.Frame):
+class vorlage_root(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.config(bg="green")

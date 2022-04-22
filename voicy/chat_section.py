@@ -51,13 +51,13 @@ class chat_section(tk.Frame):
         self.config(bg="red")
         self.grid(row=0, column=0, sticky=tk.NSEW)
         self.modu = Thread(target=self.main, name="chat_section", args=(self, ), daemon=True)
-        active_threads = enumerate()
-        #print (active_threads)
-        chat_section_alive=False
-        for item in active_threads:
-            #print(item)
-            if(item.getName()=="chat_section"):
-                chat_section_alive=True
+        self.active_threads = enumerate()
+        print(self.active_threads)
+        chat_section_alive = False
+        for item in self.active_threads:
+            # print(item)
+            if(item.getName() == "chat_section"):
+                chat_section_alive = True
         if not chat_section_alive:
             self.modu.start()
 
@@ -68,7 +68,7 @@ class chat_section(tk.Frame):
         self.written_input_entry.grid(row=2, column=1)
         self.written_input_entry.bind("<Return>", self.send_written_input)
         self.button_send = tk.Button(parent, text="SEND",
-                                             command=lambda: self.send_written_input(True))
+                                     command=lambda: self.send_written_input(True))
         self.button_send.grid(row=2, column=4, pady=2)
 
         self.chat_history = tk.Canvas(parent, bg="blue")
@@ -123,6 +123,7 @@ class chat_section(tk.Frame):
         chatrow = tk.Text(self.chat_history_frame, height=3, width=50)
         chatrow.grid(row=self.row, column=self.column)
         chatrow.insert(1.0, text)
+        print(self.active_threads)
 
     def parse_request(self, userinput):
         usernlp = "Habe ich das richtig verstanden?\n"

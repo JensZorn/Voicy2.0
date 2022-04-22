@@ -1,12 +1,12 @@
 import tkinter as tk
 
 
-class user_management(tk.Tk):
+class user_management():
 
     def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self)
-        self.title("Create a new User")
-        self.geometry("500x300")
+        super().__init__(self)
+        #self.title("Create a new User")
+        #self.geometry("500x300")
         self.LabelVorname = tk.Label(self, text="Vorname")
         self.LabelVorname.pack()
         self.EntryVorname = tk.Entry(self)
