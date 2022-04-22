@@ -20,12 +20,17 @@ from tkinter import ttk
 class vorlage_popup():
     def __init__(self, parent):
         self.parent = parent
+        self.parent.title("Vorlage Popup")
         self.parent.geometry("400x300")
         self.parent.resizable(False, False)
-        self.frame = tk.Frame(self.parent)
-        self.quitButton = tk.Button(self.frame, text='Quit', width=25, command=self.close_windows)
-        self.quitButton.pack()
-        self.frame.grid(row=0, column=0)
+        self.parent.attributes('-topmost', 'true')
+        self.frame = ttk.Frame(self.parent)
+        self.frame.grid(row=0, column=0, sticky="nsew")
+        self.quitButton = ttk.Button(self.frame,
+                                     text='Quit',
+                                     width=25,
+                                     command=self.close_window)
+        self.quitButton.grid()
 
-    def close_windows(self):
+    def close_window(self):
         self.parent.withdraw()

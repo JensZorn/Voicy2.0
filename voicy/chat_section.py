@@ -15,6 +15,7 @@
 ###############################################################################
 # import random
 import tkinter as tk
+from tkinter import ttk
 import spacy
 from threading import Thread, enumerate
 from queues import interaction_queue
@@ -45,10 +46,9 @@ class learning():
         pass
 
 
-class chat_section(tk.Frame):
+class chat_section(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.config(bg="red")
         self.grid(row=0, column=0, sticky=tk.NSEW)
         self.modu = Thread(target=self.main, name="chat_section", args=(self, ), daemon=True)
         self.active_threads = enumerate()
@@ -62,21 +62,22 @@ class chat_section(tk.Frame):
             self.modu.start()
 
     def main(self, parent):
-        self.label = tk.Label(parent, text="Command:")
+        self.label = ttk.Label(parent, text="Command:")
         self.label.grid(row=2, column=0)
-        self.written_input_entry = tk.Entry(parent, width=70)
+        self.written_input_entry = ttk.Entry(parent, width=70)
         self.written_input_entry.grid(row=2, column=1)
         self.written_input_entry.bind("<Return>", self.send_written_input)
-        self.button_send = tk.Button(parent, text="SEND",
-                                     command=lambda: self.send_written_input(True))
+        self.button_send = ttk.Button(parent, text="SEND",
+                                      command=lambda: self.send_written_input(True))
+
         self.button_send.grid(row=2, column=4, pady=2)
 
         self.chat_history = tk.Canvas(parent, bg="blue")
         self.chat_history.grid(row=0, column=0, columnspan=6, sticky=tk.NSEW)
-        self.chat_history_scroll = tk.Scrollbar(parent, orient="vertical",
+        self.chat_history_scroll = ttk.Scrollbar(parent, orient="vertical",
                                                 command=self.chat_history.yview)
         self.chat_history_scroll.grid(row=0, column=6, sticky="ns")
-        self.chat_history_frame = tk.Frame(self.chat_history, bg="red")
+        self.chat_history_frame = ttk.Frame(self.chat_history)
         self.chat_history_frame.grid(row=0, column=0, sticky=tk.NSEW)
         self.chat_history.configure(
             scrollregion=self.chat_history_frame.bbox("all"))
@@ -123,7 +124,6 @@ class chat_section(tk.Frame):
         chatrow = tk.Text(self.chat_history_frame, height=3, width=50)
         chatrow.grid(row=self.row, column=self.column)
         chatrow.insert(1.0, text)
-        print(self.active_threads)
 
     def parse_request(self, userinput):
         usernlp = "Habe ich das richtig verstanden?\n"

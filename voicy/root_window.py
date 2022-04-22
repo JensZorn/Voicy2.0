@@ -14,87 +14,110 @@
 # <°))))><
 ###############################################################################
 import tkinter as tk
+from tkinter import ttk
+from standard_theme import standard_theme
 
 
 class root_window(tk.Tk):
+
+    # The dictionary of existent modules
+    modules_list = {
+        # "modulename":[Unique-Key, gepeicherte Instanz, Displayname,
+        #               Popup/RootWindow, toolbar]
+        "chat_section": [0, "", "Chat", "root_window", True],
+        "vorlage_root": [1, "", "Vorlage", "root_window", True],
+        "vorlage_popup": [2, "", "User Management", "popup", True]
+        }
+
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self)
         self.title("Voicy-Voiceassistant")
         self.geometry("800x600+80+80")
         self.resizable(False, False)
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.style, self.colors, self.menu_theme = standard_theme()
 
-        self.main_frame = tk.Frame(self, bg="grey")
-        self.main_frame.grid(row=0, column=0, sticky="nsew")
+        self.main_frame = ttk.Frame(self)
+        self.main_frame.grid(row=1, column=0, sticky="nsew")
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.rowconfigure(0, weight=1)
 
-        # Load modules
-        self.modules_list = {
-            # "modulename":[Unique-Key, Displayname, Popup/RootWindow, toolbar]
-            "chat_section": [0, "Chat", "root_window", "toolbar"],
-            "vorlage_root": [1, "Vorlage", "root_window", "toolbar"],
-            "vorlage_popup": [2, "User Management", "popup", "toolbar"]
-            }
-        self.modules_root_window = []
-        self.modules_popup = []
-
         # Initialize Modules
         for item in self.modules_list:
-            print(item)
-            if (self.modules_list[item][2] == "popup"):
-                print("popup")
-                imp_module = __import__(item, globals(), locals(), [item], 0)
-                mod = getattr(imp_module, item)
+            imp_module = __import__(item, globals(), locals(), [item], 0)
+            module = getattr(imp_module, item)
+            if (self.modules_list[item][3] == "popup"):
                 self.popup_window = tk.Toplevel(self)
-                self.app = mod(self.popup_window)
+                self.popup_window.columnconfigure(0, weight=1)
+                self.popup_window.rowconfigure(0, weight=1)
+                self.modules_list[item][1] = module(self.popup_window)
                 self.popup_window.withdraw()
-                self.popup_window.deiconify()
-            elif (self.modules_list[item][2] == "root_window"):
-                print("root_window")
-                imp_module = __import__(item, globals(), locals(), [item], 0)
-                mod = getattr(imp_module, item)
-                self.modules_root_window.append(mod(self.main_frame))
+                # self.popup_window.deiconify()
+            elif (self.modules_list[item][3] == "root_window"):
+                self.modules_list[item][1] = module(self.main_frame)
+                # self.modules_root_window.append(mod(self.main_frame))
+            else:
+                print("Error initializing modules")
 
         self.menu_bar()
         self.tool_bar(self)
-        self.change_main_frame(0)
+        self.change_main_frame(self.modules_list["chat_section"][1])
         print("Done...")
 
     def menu_bar(self):
         menu_bar = tk.Menu(self)
+        menu_bar.config(**self.menu_theme)
         self.config(menu=menu_bar)
-        file_menu = tk.Menu(menu_bar)
+        file_menu = tk.Menu(menu_bar, tearoff=0)
+        file_menu.config(**self.menu_theme)
         file_menu.add_command(label="Exit", command=quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
+        edit_menu = tk.Menu(menu_bar, tearoff=0)
+        edit_menu.config(**self.menu_theme)
+        edit_menu.add_command(label="Exit", command=quit)
+        menu_bar.add_cascade(label="Edit", menu=edit_menu)
+        view_menu = tk.Menu(menu_bar, tearoff=0)
+        view_menu.config(**self.menu_theme)
+        view_menu.add_command(label="Exit", command=quit)
+        menu_bar.add_cascade(label="View", menu=view_menu)
+        help_menu = tk.Menu(menu_bar, tearoff=0)
+        help_menu.config(**self.menu_theme)
+        help_menu.add_command(label="Exit", command=quit)
+        menu_bar.add_cascade(label="Help", menu=help_menu)
 
     def tool_bar(self, parent):
-        self.tool_bar = tk.Frame(parent, bg="red", height=20)
+        self.tool_bar = ttk.Frame(parent)
         self.tool_bar.grid(row=0, column=0, sticky="new")
         for item in self.modules_list:
-            if (self.modules_list[item][2] == "root_window"):
-                a = self.modules_list[item][0]
-                self.toolbbutton = tk.Button(self.tool_bar, text=self.modules_list[item][1],
-                                             command=lambda j=a: self.change_main_frame(j))
-                self.toolbbutton.grid(row=0, column=self.modules_list[item][0],
-                                      sticky="w")
-            elif (self.modules_list[item][2] == "popup"):
-                a = item
-                self.toolbbutton = tk.Button(self.tool_bar, text=self.modules_list[item][1],
-                                             command=lambda j=a: self.load_popup_window(j))
-                self.toolbbutton.grid(row=0, column=self.modules_list[item][0],
-                                      sticky="w")
-
-        self.exit_button = tk.Button(self.tool_bar, text="Exit", command=quit)
-        self.exit_button.grid(row=0, column=3, sticky="w")
+            if(self.modules_list[item][3] == "root_window"
+               and self.modules_list[item][4]):
+                mod_inst = self.modules_list[item][1]
+                self.tbbutton = ttk.Button(self.tool_bar,
+                                           text=self.modules_list[item][2],
+                                           command=(lambda j=mod_inst:
+                                                    self.change_main_frame(j)))
+                self.tbbutton.grid(row=0,
+                                   column=self.modules_list[item][0],
+                                   sticky="w")
+            elif(self.modules_list[item][3] == "popup"
+                 and self.modules_list[item][4]):
+                mod_inst = self.modules_list[item][1]
+                self.tbbutton = ttk.Button(self.tool_bar,
+                                           text=self.modules_list[item][2],
+                                           command=(lambda j=mod_inst:
+                                                    self.show_popup_window(j)))
+                self.tbbutton.grid(row=0,
+                                   column=self.modules_list[item][0],
+                                   sticky="w")
+        # Der Exit Button soll bestimmt irgendwann weg
+        self.exit_tbbutton = ttk.Button(self.tool_bar,
+                                        text="Exit",
+                                        command=quit)
+        self.exit_tbbutton.grid(row=0, column=3, sticky="w")
 
     def change_main_frame(self, module):
-        frame = self.modules_root_window[module]
-        frame.tkraise()
+        module.tkraise()
 
-    def load_popup_window(self, module):
-        imp_module = __import__(module, globals(), locals(), [module], 0)
-        mod = getattr(imp_module, module)
-        self.popup_window = tk.Toplevel(self)
-        self.app = mod(self.popup_window)
+    def show_popup_window(self, module):
+        module.parent.deiconify()
