@@ -133,14 +133,5 @@ class chat_section(ttk.Frame):
         usernlp += "\n"
         for token in doc:
             usernlp += token.dep_ + " "
-        for token in doc:
-            match(token.dep_):
-                case "ROOT":
-                    match(token.lemma_):
-                        case "test":
-                            usernlp += "Dies war ein Test."
-                        case "können":
-                            usernlp += "Du kannst mich mal!"
-                        case "kalender":
-                            usernlp += "Kalender starten"
+
         return usernlp

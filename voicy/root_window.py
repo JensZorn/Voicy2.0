@@ -26,7 +26,8 @@ class root_window(tk.Tk):
         #               Popup/RootWindow, toolbar]
         "chat_section": [0, "", "Chat", "root_window", True],
         "vorlage_root": [1, "", "Vorlage", "root_window", True],
-        "vorlage_popup": [2, "", "User Management", "popup", True]
+        "vorlage_popup": [2, "", "User Management", "popup", True],
+        "voicy_calendar": [4, "", "Kalender", "popup", True]
         }
 
     def __init__(self, *args, **kwargs):
@@ -62,7 +63,7 @@ class root_window(tk.Tk):
 
         self.menu_bar()
         self.tool_bar(self)
-        self.change_main_frame(self.modules_list["chat_section"][1])
+        self.change_main_frame(self.modules_list["vorlage_root"][1])
         print("Done...")
 
     def menu_bar(self):
