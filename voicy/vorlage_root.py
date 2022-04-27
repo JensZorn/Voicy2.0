@@ -16,6 +16,10 @@
 import tkinter as tk
 from tkinter import ttk
 
+# initialisiert einen ttk.Frame, dessen parent der self.main_frame des
+# root_window ist.
+# Startklasse muss so benannt werden, wie die Datei
+
 
 class vorlage_root(ttk.Frame):
     def __init__(self, parent):
