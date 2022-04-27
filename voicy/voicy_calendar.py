@@ -30,6 +30,7 @@ class voicy_calendar():
         self.parent.geometry("400x300")
         self.parent.resizable(False, False)
         self.parent.attributes('-topmost', 'true')
+        self.parent.protocol("WM_DELETE_WINDOW", self.close_window)
         self.frame = ttk.Frame(self.parent)
         self.frame.grid(row=0, column=0, sticky="nsew")
         self.quitButton = ttk.Button(self.frame,
@@ -37,20 +38,33 @@ class voicy_calendar():
                                      width=25,
                                      command=self.close_window)
 
-
         self.quitButton.grid()
 
-        self.cal = Calendar(self.frame, selectmode='day',
-                       year=2022, month=4,
-                       day=26)
+
+
+
+
+
+        self.cal = Calendar(self.frame, now = datetime.now())
 
         self.cal.grid()
 
-        self.takeButton = ttk.Button(self.frame)
+        self.takeButton = ttk.Button(self.frame,
+                                     text='Übernehme das Datum',
+                                     width=25,
+                                     )
         self.takeButton.grid(row = 3, column = 3)
 
+        #self.time = datetime(self.frame, datetime.now())
 
-
+        #self.time.grid(row = 2, column = 3)
 
     def close_window(self):
-        self.parent.withdraw()
+            self.parent.withdraw()
+
+
+
+
+
+
+
