@@ -1,22 +1,31 @@
 import tkinter as tk
+from tkinter import ttk
 
 
 class user_management():
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(self)
-        #self.title("Create a new User")
-        #self.geometry("500x300")
-        self.LabelVorname = tk.Label(self, text="Vorname")
+    def __init__(self, parent, *args, **kwargs):
+        self.parent = parent
+        self.parent.title("User Management")
+        self.parent.geometry("400x300+50+50")
+        self.parent.resizable(False, False)
+        self.parent.attributes('-topmost', 'true')
+        self.parent.protocol("WM_DELETE_WINDOW", self.close_window)
+        self.frame = ttk.Frame(self.parent)
+        self.frame.grid(row=0, column=0, sticky="nsew")
+        self.LabelVorname = tk.Label(self.frame, text="Vorname")
         self.LabelVorname.pack()
-        self.EntryVorname = tk.Entry(self)
+        self.EntryVorname = tk.Entry(self.frame)
         self.EntryVorname.pack()
-        self.LabelNachname = tk.Label(self, text="Nachname")
+        self.LabelNachname = tk.Label(self.frame, text="Nachname")
         self.LabelNachname.pack()
-        self.EntryNachname = tk.Entry(self)
+        self.EntryNachname = tk.Entry(self.frame)
         self.EntryNachname.pack()
-        self.Buttonsenden = tk.Button(self, text="Ok")
+        self.Buttonsenden = tk.Button(self.frame, text="Ok")
         self.Buttonsenden.pack()
+
+    def close_window(self):
+        self.parent.withdraw()
 
     def create_new_table(self):
         self.connection = sq3.connect("database.db")
