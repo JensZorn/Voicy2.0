@@ -24,7 +24,7 @@ class root_window(tk.Tk):
     modules_list = {
         # "modulename":[Unique-Key, gepeicherte Instanz, Displayname,
         #               Popup/RootWindow, toolbar]
-        "chat_section": [0, "chat_section", "", "Chat", "root_window", True],
+        #"chat_section": [0, "chat_section", "", "Chat", "root_window", True],
         "user_management": [1, "user_management", "", "User Management",
                             "popup", True],
         "voicy_calendar": [2, "voicy_calendar", "", "Kalender", "popup", True],
@@ -68,7 +68,7 @@ class root_window(tk.Tk):
 
         self.menu_bar()
         self.tool_bar(self)
-        self.change_main_frame(self.modules_list["chat_section"][2])
+        self.change_main_frame(self.modules_list["vorlage_root"][2])
         print("Done...")
 
     def menu_bar(self):
