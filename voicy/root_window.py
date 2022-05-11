@@ -24,7 +24,7 @@ class root_window(tk.Tk):
     modules_list = {
         # "modulename":[Unique-Key, gepeicherte Instanz, Displayname,
         #               Popup/RootWindow, toolbar]
-        #"chat_section": [0, "chat_section", "", "Chat", "root_window", True],
+        "chat_section": [0, "chat_section", "", "Chat", "root_window", True],
         "user_management": [1, "user_management", "", "User Management",
                             "popup", True],
         "voicy_calendar": [2, "voicy_calendar", "", "Kalender", "popup", True],
@@ -70,14 +70,6 @@ class root_window(tk.Tk):
             else:
                 print("Error initializing modules")
 
-<<<<<<< HEAD
-=======
-        self.menu_bar()
-        self.tool_bar(self)
-        self.change_main_frame(self.modules_list["vorlage_root"][2])
-        print("Done...")
-
->>>>>>> 29ee91fe0ab7cc53a9ec3ca51f949dd7fe4b4640
     def menu_bar(self):
         menu_bar = tk.Menu(self)
         menu_bar.config(**self.menu_theme)
