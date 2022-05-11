@@ -16,4 +16,5 @@
 from queue import Queue
 
 
-interaction_queue = Queue(maxsize=0)
+to_nlp = Queue(maxsize=0)
+from_nlp = Queue(maxsize=0)

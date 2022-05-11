@@ -24,13 +24,13 @@ class root_window(tk.Tk):
     modules_list = {
         # "modulename":[Unique-Key, gepeicherte Instanz, Displayname,
         #               Popup/RootWindow, toolbar]
-        #"chat_section": [0, "chat_section", "", "Chat", "root_window", True],
+        "chat_section": [0, "chat_section", "", "Chat", "root_window", True],
         "user_management": [1, "user_management", "", "User Management",
                             "popup", True],
         "voicy_calendar": [2, "voicy_calendar", "", "Kalender", "popup", True],
-        "vorlage_root": [8, "vorlage_root", "", "Vorlage", "root_window",
+        "vorlage_root": [8, "vorlage_root", "", "Vorlage Root", "root_window",
                          True],
-        "vorlage_popup": [9, "vorlage_popup", "", "User Management", "popup",
+        "vorlage_popup": [9, "vorlage_popup", "", "Vorlage Popup", "popup",
                           True]
         }
 
@@ -41,13 +41,19 @@ class root_window(tk.Tk):
         self.resizable(False, False)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
-        self.style, self.colors, self.menu_theme = standard_theme()
+        self.style, self.colors, self.menu_theme = standard_theme(self)
 
         self.main_frame = ttk.Frame(self)
         self.main_frame.grid(row=1, column=0, sticky="nsew")
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.rowconfigure(0, weight=1)
 
+        self.initialize_modules()
+        self.menu_bar()
+        self.tool_bar(self)
+        self.change_main_frame(self.modules_list["chat_section"][2])
+
+    def initialize_modules(self):
         # Initialize Modules
         for item in self.modules_list:
             imp_module = __import__(item, globals(), locals(), [item], 0)
@@ -59,17 +65,10 @@ class root_window(tk.Tk):
                 module(self.popup_window)
                 self.modules_list[item][2] = self.popup_window
                 self.popup_window.withdraw()
-                # self.popup_window.deiconify()
             elif (self.modules_list[item][4] == "root_window"):
                 self.modules_list[item][2] = module(self.main_frame)
-                # self.modules_root_window.append(mod(self.main_frame))
             else:
                 print("Error initializing modules")
-
-        self.menu_bar()
-        self.tool_bar(self)
-        self.change_main_frame(self.modules_list["vorlage_root"][2])
-        print("Done...")
 
     def menu_bar(self):
         menu_bar = tk.Menu(self)
@@ -130,15 +129,3 @@ class root_window(tk.Tk):
             module[2].deiconify()
         except Exception:
             print("Mist, Popup Fenster Problem!")
-            # imp_module = __import__(module[1], globals(), locals(),
-            # [module[1]], 0)
-            # modul = getattr(imp_module, module[1])
-            # self.popup_window = tk.Toplevel(self)
-            # self.popup_window.columnconfigure(0, weight=1)
-            # self.popup_window.rowconfigure(0, weight=1)
-            # modul(self.popup_window)
-            # print(type(module))
-            # print(self.modules_list[module[1]])
-            # del self.modules_list[module[1]][2]
-            # self.modules_list[module[1]].insert(2, self.popup_window)
-            # self.popup_window.withdraw()
