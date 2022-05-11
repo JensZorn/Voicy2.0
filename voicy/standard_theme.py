@@ -16,7 +16,7 @@
 from tkinter import ttk
 
 
-def standard_theme():
+def standard_theme(parent):
     colors = {
         'fg': '#5c616c',
         'bg': '#f5f6f7',
@@ -29,7 +29,7 @@ def standard_theme():
         'checklight': '#fbfcfc'
     }
 
-    style = ttk.Style()
+    style = ttk.Style(parent)
     style.theme_create('standard-voicy', 'default')
     style.theme_use('standard-voicy')
 
@@ -77,5 +77,6 @@ def standard_theme():
                   "activeforeground": colors['selectfg'],
                   "activeborderwidth": 1,
                   "font": ('TkDefaultFont', )}
+    print("läuft...")
 
     return style, colors, menu_theme

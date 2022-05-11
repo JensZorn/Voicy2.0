@@ -16,41 +16,16 @@
 # import random
 import tkinter as tk
 from tkinter import ttk
-import spacy
 from threading import Thread, enumerate
-from queues import interaction_queue
-nlp = spacy.load("de_core_news_lg")
-
-"""
-randomanswer = ["Oh, wie schön!", "Sehr interessant!", "Wenn Sie meinen,...", "Ach, das hätte ich nicht gedacht.",
-                "Manchmal fällt ein Sack Reis um und das interessiert auch niemanden"]
-
-reactions = {"hallo": "oh, willkommen!",
-             "hunger": "Das Einzige was ich essen kann ist in deiner Steckdose!",
-             "zeit": "Ja, die Zeit rennt extrem schnell.",
-             "danke": "Sehr gerne, ich bin immer für dich da!",
-             "trinken": "Kein Bier vor vier!",
-             "sitzen": "Sitzen ist was für dicke, faule Säcke",
-             "langeweile": "Man könnte bei langeweile etwas essen gehen.",
-             "stop": "Ok, ich glaube ich bin zu weit gegangen",
-             "glaube": "Das kann ich mir nicht vorstellen",
-             "laufen": "Zum Glück musst du mich immer transportieren, darauf hätte ich keine Lust.",
-             "freude": "Freude ist schön, vor allem wenn man sich die Freude teilen darf.",
-             "weihnachten":"Weihnachten ist das Fest der Liebe!",
-             "einkaufsliste": "Ich habe es auf die Einkaufsliste hinzugefügt"}
-"""
-
-
-class learning():
-    def __init__(self):
-        pass
+from queues import to_nlp, from_nlp
 
 
 class chat_section(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.grid(row=0, column=0, sticky=tk.NSEW)
-        self.modu = Thread(target=self.main, name="chat_section", args=(self, ), daemon=True)
+        self.modu = Thread(target=self.main, name="chat_section",
+                           args=(self, ), daemon=True)
         self.active_threads = enumerate()
         print(self.active_threads)
         chat_section_alive = False
@@ -68,14 +43,15 @@ class chat_section(ttk.Frame):
         self.written_input_entry.grid(row=2, column=1)
         self.written_input_entry.bind("<Return>", self.send_written_input)
         self.button_send = ttk.Button(parent, text="SEND",
-                                      command=lambda: self.send_written_input(True))
+                                      command=lambda:
+                                      self.send_written_input(True))
 
         self.button_send.grid(row=2, column=4, pady=2)
 
         self.chat_history = tk.Canvas(parent, bg="blue")
         self.chat_history.grid(row=0, column=0, columnspan=6, sticky=tk.NSEW)
         self.chat_history_scroll = ttk.Scrollbar(parent, orient="vertical",
-                                                command=self.chat_history.yview)
+                                                 command=self.chat_history.yview)
         self.chat_history_scroll.grid(row=0, column=6, sticky="ns")
         self.chat_history_frame = ttk.Frame(self.chat_history)
         self.chat_history_frame.grid(row=0, column=0, sticky=tk.NSEW)
@@ -88,15 +64,12 @@ class chat_section(ttk.Frame):
 
         # Start the chat greeting the user
 
-        self.chat_bubble("bot", "Hallo, ich bin Voicy! Wie ist dein Name?")
+        # self.chat_bubble("bot", "Hallo, ich bin Voicy! Wie ist dein Name?")
 
         while True:
             # try:
-            self.userinput = interaction_queue.get()
-            self.chat_bubble("user", self.userinput)
-            self.usernlp = self.parse_request(self.userinput)
-
-            self.chat_bubble("bot", self.usernlp)
+            self.userinput = from_nlp.get()
+            self.chat_bubble("bot", self.userinput)
 
             parent.update_idletasks()
             self.chat_history.configure(
@@ -112,7 +85,8 @@ class chat_section(ttk.Frame):
 
         self.writtencommand = self.written_input_entry.get()
         self.written_input_entry.delete(0, tk.END)
-        interaction_queue.put(self.writtencommand)
+        self.chat_bubble("user", self.writtencommand)
+        to_nlp.put(self.writtencommand)
 
     def chat_bubble(self, owner, text):
         self.column, self.row = list(self.chat_history_frame.grid_size())
@@ -124,14 +98,3 @@ class chat_section(ttk.Frame):
         chatrow = tk.Text(self.chat_history_frame, height=3, width=50)
         chatrow.grid(row=self.row, column=self.column)
         chatrow.insert(1.0, text)
-
-    def parse_request(self, userinput):
-        usernlp = "Habe ich das richtig verstanden?\n"
-        doc = nlp(userinput)
-        for token in doc:
-            usernlp += token.lemma_ + " "
-        usernlp += "\n"
-        for token in doc:
-            usernlp += token.dep_ + " "
-
-        return usernlp
