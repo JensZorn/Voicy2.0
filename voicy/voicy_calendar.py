@@ -15,11 +15,14 @@
 ###############################################################################
 import tkinter as tk
 from tkinter import ttk
+from tkinter import StringVar
 from tkcalendar import Calendar
 from datetime import datetime
 from pytz import timezone
 from datetime import date
-from datetime import time
+from threading import Thread
+
+from time import strftime, sleep
 
 
 
@@ -38,26 +41,45 @@ class voicy_calendar():
                                      width=25,
                                      command=self.close_window)
 
-        self.quitButton.grid()
+        self.quitButton.grid(row=0, column=0)
 
+        self.now = datetime.now()
+        self.clock = StringVar()
+        self.lbl = ttk.Label(self.frame, font=('calibri', 12, 'bold'),
+                    background='grey',
+                    foreground='white',
+                    textvariable=self.clock
+                    )
 
+        self.lbl.grid(row=1, column=0)
 
-
-
-
-        self.cal = Calendar(self.frame, now = datetime.now())
-
-        self.cal.grid()
+        self.cal = Calendar(self.frame, today=date.today())
+        self.cal.grid(sticky="nsew")
 
         self.takeButton = ttk.Button(self.frame,
                                      text='Übernehme das Datum',
                                      width=25,
                                      )
-        self.takeButton.grid(row = 3, column = 3)
+        self.takeButton.grid(row=3, column=0)
 
-        #self.time = datetime(self.frame, datetime.now())
+        self.thread=Thread(target=self.clock_update,args=(self.frame, ), daemon=True)
+        self.thread.start()
 
-        #self.time.grid(row = 2, column = 3)
+    def clock_update(self, parent):
+        while True:
+            self.clock.set(strftime('%H:%M:%S %p'))
+            parent.update_idletasks()
+            sleep(1)
+
+
+
+
+
+
+
+
+
+
 
     def close_window(self):
             self.parent.withdraw()
