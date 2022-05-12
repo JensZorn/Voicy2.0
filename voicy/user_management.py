@@ -10,7 +10,7 @@ class user_management():
         self.parent = parent
         self.parent.title("User Management")
         self.parent.geometry("400x300+50+50")
-        #self.parent.resizable(False, False)
+        self.parent.resizable(False, False)
         self.parent.attributes('-topmost', 'true')
         self.parent.protocol("WM_DELETE_WINDOW", self.close_window)
         self.container = tk.Frame(self.parent)
