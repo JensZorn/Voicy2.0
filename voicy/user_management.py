@@ -21,6 +21,7 @@ class user_management():
         self.container.grid_columnconfigure(0, weight=1)
 
         
+        
         self.frames = {}
         for F in (user_login, new_user):
             page_name = F.__name__
