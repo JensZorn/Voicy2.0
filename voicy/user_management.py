@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 import sqlite3 as sq3
-from tkinter import font as tkfont
 
 
 class user_management():
