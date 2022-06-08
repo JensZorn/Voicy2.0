@@ -20,30 +20,25 @@ from threading import Thread
 from standard_theme import standard_theme
 
 
-class App(Thread):
+class App(tk.Toplevel):
 
-    def __init__(self):
-        Thread.__init__(self, daemon=True)
-        self.start()
+    def __init__(self, master):
+        tk.Toplevel.__init__(self, master)
+        self.geometry("400x300+50+50")
+        self.resizable(False, False)
+        self.attributes('-topmost', 'true')
+        self.overrideredirect(True)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        # self.style, self.colors, self.menu_theme = standard_theme(self)
 
-    def run(self):
-        self.root = tk.Tk()
-        self.root.title("Voicy Splash Screen")
-        self.root.geometry("400x300+50+50")
-        self.root.resizable(False, False)
-        self.root.attributes('-topmost', 'true')
-        self.root.overrideredirect(True)
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
-        self.style, self.colors, self.menu_theme = standard_theme(self.root)
-
-        self.canvas = tk.Canvas(self.root)
+        self.canvas = tk.Canvas(self)
         self.canvas.grid(row=0, column=0, sticky="nsew")
         label = ttk.Label(self.canvas, text="Hello World")
-        label.pack()
-        self.root.after(500, lambda: test())
-        self.root.after(8000, lambda: self.root.destroy())
-        self.root.mainloop()
+        label.grid()
+        # self.root.after(500, lambda: test())
+        self.after(8000, lambda: self.destroy())
+        # self.root.mainloop()
 
 
 class test(Thread):
@@ -60,6 +55,7 @@ class test(Thread):
 
 if __name__ == "__main__":
     print("Loading, please wait!")
-    app = App()
+
     root = root_window()
+    app = App(root)
     root.mainloop()
