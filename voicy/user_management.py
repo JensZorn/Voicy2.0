@@ -142,6 +142,7 @@ class new_user(tk.Frame):
         self.connection.close()
 
         print("Entry added")
+    
         
 
     def show_table(self):
@@ -153,7 +154,7 @@ class new_user(tk.Frame):
         
         self.connection.close()
         
-        print("Show Entry")
+        print("Show New Entry")
         
 
         
