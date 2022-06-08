@@ -108,9 +108,9 @@ class new_user(tk.Frame):
         self.connection = sq3.connect("database.db")
         self.cursor = self.connection.cursor()
         self.crateTable = """ CREATE TABLE IF NOT EXISTS user (
-                        id INT  AUTO_INCREMENT,
-                        firstName VARCHAR(255), lastName VARCHAR(255));"""
-                        
+                        email VARCHAR(255), user VARCHAR(255), 
+                        first_passw VARCHAR (255),
+                        second_passw VARCHAR (255));"""
                         
         self.cursor.execute(self.crateTable)
         self.connection.commit()
@@ -134,7 +134,7 @@ class new_user(tk.Frame):
         self. input_password_second = self.input_password_second
         
         self.cursor.execute(""" INSERT INTO user VALUES (?,?,?,?)""",
-                            ("id", self.input_e_mail, self.input_user_name,
+                            (self.input_e_mail, self.input_user_name,
                              self.input_password_first, self.input_password_second))
 
         
@@ -154,7 +154,7 @@ class new_user(tk.Frame):
         
         self.connection.close()
         
-        print("Show New Entry")
+        print("Show Entry")
         
 
         
