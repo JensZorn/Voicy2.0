@@ -153,7 +153,7 @@ class new_user(tk.Frame):
         
         self.connection.close()
         
-        print("Show Entry")
+        print("Show New Entry")
         
 
         
