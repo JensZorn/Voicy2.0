@@ -31,7 +31,7 @@ class voicy_calendar():
     def __init__(self, parent):
         self.parent = parent
         self.parent.title("Kalender")
-        self.parent.geometry("400x300")
+        self.parent.geometry("600x300")
         self.parent.resizable(False, False)
         self.parent.attributes('-topmost', 'true')
         self.parent.protocol("WM_DELETE_WINDOW", self.close_window)
@@ -55,13 +55,35 @@ class voicy_calendar():
         self.lbl.grid(row=1, column=0)
 
         self.cal = Calendar(self.frame, today=date.today())
-        self.cal.grid(row= 0, column = 0, sticky="nsew")
+        self.cal.grid(row=1, column=1)
 
         self.takeButton = ttk.Button(self.frame,
                                      text='Übernehme das Datum',
                                      width=25,
                                      )
         self.takeButton.grid(row=3, column=0)
+
+        self.HoursList = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
+                          "17", "18", "19", "20", "21", "22", "23", "24"]
+        self.MinuteList = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
+
+        self.clicked = StringVar()
+
+        self.drophours = ttk.OptionMenu(self.frame, self.clicked, *self.HoursList)
+        self.drophours.config(width=5)
+        self.drophours.grid(row=1, column=2)
+
+        self.clicked1 = StringVar()
+
+        self.dropminute = ttk.OptionMenu(self.frame, self.clicked1, *self.MinuteList)
+        self.dropminute.config(width=5)
+        self.dropminute.grid(row=1, column=3)
+
+
+
+        #self.button = ttk.Button(self.frame, text="click here", width=25)
+        #self.button.grid(row=3, column=3)
+
 
         self.thread=Thread(target=self.clock_update,args=(self.frame, ), daemon=True)
         self.thread.start()
@@ -72,33 +94,14 @@ class voicy_calendar():
             parent.update_idletasks()
             sleep(1)
 
-    def clicked(self):
-        self.HoursList = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
-                          "17", "18", "19", "20", "21", "22", "23", "24"]
-        self.MinuteList = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
 
 
 
 
 
-        self.clicked=ttk.StringVar()
-        self.takeTime(textvariable="self.clicked")
-        self.clicked.set("self.HoursList[0]","self.MinuteList[00]")
 
 
 
-        self.button=ttk.Button(self.frame, text="Uhrzeit auswählen", width = 25, command = self.show)
-        self.button.grid()
-
-
-
-        self.dropdown = ttk.OptionMenu(self.frame, self.clicked, self.HoursList)
-        self.dropdown.config(width=80, font=("helvetica", 12))
-        self.dropdown.grid(row=3, column=2)
-
-        self.dropdown.minute = ttk.OptionMenu(self.frame, self.clicked, self.MinuteList)
-        self.dropdown.minute.config(width=80, font=("helvetica", 12))
-        self.dropdown.minute.grid(row=3, column=3)
 
     #def callback(self):
 
